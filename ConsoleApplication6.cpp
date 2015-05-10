@@ -60,10 +60,23 @@ void list::list_delete()
 
 }
 
-
-void list::list_insert(char direction)
+NODE *insert(const char direction, NODE *first)
 {
-
+	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
+	
+	switch (direction) {
+	case 'w':
+		newfirst->y = first->y + 1;
+		newfirst->next = first;
+		first->pre = newfirst;
+		newfirst
+	case 'a':
+	case 's';
+	case 'd';
+	default:
+		return NULL;
+	}
+	return newfirst;
 }
 
 
