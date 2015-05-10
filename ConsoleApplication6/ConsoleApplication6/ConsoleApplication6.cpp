@@ -14,18 +14,17 @@ struct NODE
 	NODE* pre;
 	NODE* next;
 };												//双向链表结构
-void list_delete();
+NODE* list_delete();
 struct NODE *insert(const char direction, NODE *first);
 void list_check();							//检验碰撞
 void print_frame();
-int settings();
+NODE* settings();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	int Nowtime, Pretime;
-	char
 	settings();
-	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"), 
+	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"),
 		TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
 	switch (Me_result)
 	{
@@ -35,13 +34,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	while (1)
 	{
 		print_frame();
-		if (kbhit())
+		if (_kbhit())
 		{
-			direction = getch();
+			direction = _getch();
 
 		}
-		
-
 	}
 	exit:
 	system("pause");
@@ -63,16 +60,27 @@ NODE* list_delete()
 NODE *insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
-	
+	if (!newfirst) {
+		printf("Memory calloc F\n");
+		return NULL;
+	}
+	newfirst->next = first;
+	newfirst->pre = NULL;
+	first->pre = newfirst;
+
 	switch (direction) {
 	case 'w':
 		newfirst->y = first->y + 1;
-		newfirst->next = first;
-		first->pre = newfirst;
-		newfirst
+		newfirst->x = first->x;
 	case 'a':
+		newfirst->y = first->y;
+		newfirst->x = first->x - 1;
 	case 's':
+		newfirst->y = first->y - 1;
+		newfirst->x = first->x;
 	case 'd':
+		newfirst->y = first->y;
+		newfirst->x = first->x + 1;
 	default:
 		return NULL;
 	}
@@ -92,7 +100,7 @@ void print_frame()
 }
 
 
-int settings()
+NODE* settings()
 {
 	int i, j, z,TEMPx,TEMPy;
 	TEMPx = 0.5*X_MAX;
@@ -120,12 +128,12 @@ int settings()
 		}
 	}
 	print_array[TEMPx][TEMPy] = '@'; TEMPy--;
-	print_array[TEMPx][TEMPy] = '█'; TEMPy--; 
+	print_array[TEMPx][TEMPy] = '█'; TEMPy--;
 	print_array[TEMPx][TEMPy] = '█';
 
 	//初始链表创建
 	struct NODE* pNew;
-	struct NODE* pHead;
+	struct NODE* pHead = NULL;
 	struct NODE* pEnd;
 	//the first op
 	pEnd = pNew = (struct NODE*)malloc(sizeof(struct NODE));
