@@ -12,7 +12,7 @@ struct NODE
 	NODE* next;
 };
 										//双向链表结构
-NODE* list_delete(NODE *previous,NODE *last);
+NODE* list_delete(NODE *last);
 struct NODE *insert(const char direction, NODE *first);
 void list_check();							//检验碰撞
 void print_frame();
@@ -20,18 +20,18 @@ NODE* settings();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	int Nowtime, Pretime;
+	int Nowtime, Pretime,index;
 	NODE *pHead,*pEnd;
 	pHead = settings();
+	pEnd = pHead;
 	int Me_result = MessageBox(NULL,
 			TEXT("press OK to start\npress cancel to exit"),
 			TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
 	switch (Me_result)
 	{
-	case IDYES: break;
-	case IDNO:goto exit;
+		case IDYES: break;
+		case IDNO:goto exit;
 	}
-	pEnd = pHead;
 	while (pEnd != NULL)
 	{
 		pEnd->next;
@@ -45,14 +45,26 @@ int _tmain(int argc, _TCHAR* argv[])
 			if (temp == 'w' || temp == 's' || temp == 'a' || temp == 'd')
 				direction = temp;
 		}
-		pEnd = list_delete();
+		pEnd = list_delete(pEnd);
 		insert(direction,pHead);
 		list_check();
 		print_frame();
 		Pretime = clock();
-			continue;
+		for (index = 0;; index++)
+		{
+			Nowtime = clock();
+			if (_kbhit())
+			{
+				temp = _getch();
+				if (temp == 'w' || temp == 's' || temp == 'a' || temp == 'd')
+					direction = temp;
+			}
+			if ((Nowtime - Pretime) >= TIME_DELAY)
+				continue;
+		}
 	}
-	exit:
+exit:
+	free(pHead);	 free(pEnd);
 	system("pause");
 	return 0;
 }
@@ -66,12 +78,13 @@ void list_check(NODE *first)
 	}
 }
 
-NODE *list_delete(NODE *previous,NODE *last)
+NODE *list_delete(NODE* last)
 {
+	NODE *temp;
+	temp = last->pre;
 	free(last);
-	last = NULL;
-	previous->next = NULL;
-	return previous;
+	temp->next = NULL;
+	return temp;
 }
 
 NODE *list_insert(const char direction, NODE *first)
