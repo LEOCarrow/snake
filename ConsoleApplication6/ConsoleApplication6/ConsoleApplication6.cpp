@@ -13,8 +13,8 @@ struct NODE
 };
 										//双向链表结构
 NODE* list_delete(NODE *last);
-struct NODE *insert(const char direction, NODE *first);
-void list_check();							//检验碰撞
+NODE* insert(const char direction, NODE *first);
+void list_check(NODE *first);							//检验碰撞
 void print_frame();
 NODE* settings();
 
@@ -46,21 +46,21 @@ int _tmain(int argc, _TCHAR* argv[])
 				direction = temp;
 		}
 		pEnd = list_delete(pEnd);
-		insert(direction,pHead);
-		list_check();
+		pHead = insert(direction,pHead);
+		list_check(pHead);
 		print_frame();
 		Pretime = clock();
 		for (index = 0;; index++)
 		{
-			Nowtime = clock();
 			if (_kbhit())
 			{
 				temp = _getch();
 				if (temp == 'w' || temp == 's' || temp == 'a' || temp == 'd')
 					direction = temp;
 			}
+			Nowtime = clock();
 			if ((Nowtime - Pretime) >= TIME_DELAY)
-				continue;
+				break;
 		}
 	}
 exit:
@@ -81,13 +81,14 @@ void list_check(NODE *first)
 NODE *list_delete(NODE* last)
 {
 	NODE *temp;
+	print_array[last->x][last->y] = ' ';
 	temp = last->pre;
-	free(last);
 	temp->next = NULL;
 	return temp;
+	free(last);
 }
 
-NODE *list_insert(const char direction, NODE *first)
+NODE *insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
@@ -102,15 +103,23 @@ NODE *list_insert(const char direction, NODE *first)
 	case 'w':
 		newfirst->y = first->y + 1;
 		newfirst->x = first->x;
+		print_array[newfirst->x][newfirst->y = '█'];
+		break;
 	case 'a':
 		newfirst->y = first->y;
 		newfirst->x = first->x - 1;
+		print_array[newfirst->x][newfirst->y] = '█';
+		break;
 	case 's':
 		newfirst->y = first->y - 1;
 		newfirst->x = first->x;
+		print_array[newfirst->x][newfirst->y] = '█';
+		break;
 	case 'd':
 		newfirst->y = first->y;
 		newfirst->x = first->x + 1;
+		print_array[newfirst->x][newfirst->y] = '█';
+		break;
 	default:
 		return NULL;
 	}
@@ -175,6 +184,7 @@ NODE* settings()
 	pNew->next = pHead;
 	pEnd = pNew;
 	pHead = pNew;
+	pEnd->pre = NULL;
 	//the second op
 	pNew = (struct NODE*)malloc(sizeof(struct NODE));
 	if (!pNew) {
@@ -182,7 +192,9 @@ NODE* settings()
 		return NULL;
 	}
 
+	pNew->pre = pEnd;
 	(pNew->x) = 7; (pNew->y) = 6;
+	pNew->pre = NULL;
 	pNew->next = NULL;
 	pEnd->next = pNew;
 	pHead = pNew;
@@ -193,6 +205,7 @@ NODE* settings()
 		return NULL;
 	}
 
+	pNew->pre = pEnd;
 	(pNew->x) = 7; (pNew->y) = 5;
 	pNew->next = NULL;
 	pEnd->next = pNew;
