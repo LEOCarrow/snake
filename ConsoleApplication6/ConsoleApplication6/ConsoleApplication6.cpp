@@ -56,6 +56,10 @@ void list_delete()
 NODE *insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
+	if (!newfirst) {
+		printf("Memory calloc F\n");
+		return NULL;
+	}
 	newfirst->next = first;
 	newfirst->pre = NULL;
 	first->pre = newfirst;
