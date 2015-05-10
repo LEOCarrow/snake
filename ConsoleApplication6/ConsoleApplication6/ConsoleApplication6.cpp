@@ -1,11 +1,8 @@
-﻿// ConsoleApplication6.cpp : 定义控制台应用程序的入口点。
-//
-
 #include "stdafx.h"
 
 char print_array[X_MAX][Y_MAX];
-char direction;
-bool if_get_fruit=0;
+static char direction;
+static bool if_get_fruit = true;
 using namespace std;
 
 struct NODE
@@ -13,8 +10,9 @@ struct NODE
 	int x,y;
 	NODE* pre;
 	NODE* next;
-};												//双向链表结构
-NODE* list_delete();
+};
+										//双向链表结构
+NODE* list_delete(NODE *previous,NODE *last);
 struct NODE *insert(const char direction, NODE *first);
 void list_check();							//检验碰撞
 void print_frame();
@@ -24,8 +22,9 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	int Nowtime, Pretime;
 	settings();
-	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"),
-		TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
+	int Me_result = MessageBox(NULL,
+			TEXT("press OK to start\npress cancel to exit"),
+			TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
 	switch (Me_result)
 	{
 	case IDYES: break;
@@ -46,9 +45,12 @@ int _tmain(int argc, _TCHAR* argv[])
 }
 
 
-void list_check()
+void list_check(NODE *first)
 {
-
+	NODE *current = first;
+	while (current != NULL) {
+		
+	}
 }
 
 NODE *list_delete(NODE *previous,NODE *last)
@@ -97,7 +99,7 @@ void print_frame()
 	{
 		for (index = 0; index < 15; index++)
 			printf("%c", print_array[i][index]);
-		cout << endl;
+		printf("\n");
 	}
 }
 
@@ -139,18 +141,32 @@ NODE* settings()
 	struct NODE* pEnd;
 	//the first op
 	pEnd = pNew = (struct NODE*)malloc(sizeof(struct NODE));
+	if (!pNew) {
+		printf("Memory calloc F\n");
+		return NULL;
+	}
 	(pNew->x) = 7; (pNew->y) = 7;
 	pNew->next = pHead;
 	pEnd = pNew;
 	pHead = pNew;
 	//the second op
 	pNew = (struct NODE*)malloc(sizeof(struct NODE));
+	if (!pNew) {
+		printf("Memory calloc F\n");
+		return NULL;
+	}
+
 	(pNew->x) = 7; (pNew->y) = 6;
 	pNew->next = NULL;
 	pEnd->next = pNew;
 	pHead = pNew;
 	//the second op
 	pNew = (struct NODE*)malloc(sizeof(struct NODE));
+	if (!pNew) {
+		printf("Memory calloc F\n");
+		return NULL;
+	}
+
 	(pNew->x) = 7; (pNew->y) = 5;
 	pNew->next = NULL;
 	pEnd->next = pNew;
