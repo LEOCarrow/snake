@@ -25,7 +25,7 @@ void settings();
 int _tmain(int argc, _TCHAR* argv[])
 {
 	settings();
-	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"), 
+	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"),
 		TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
 	switch (Me_result)
 	{
@@ -56,16 +56,27 @@ void list_delete()
 NODE *insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
-	
+	if (!newfirst) {
+		printf("Memory calloc F\n");
+		return NULL;
+	}
+	newfirst->next = first;
+	newfirst->pre = NULL;
+	first->pre = newfirst;
+
 	switch (direction) {
 	case 'w':
 		newfirst->y = first->y + 1;
-		newfirst->next = first;
-		first->pre = newfirst;
-		newfirst
+		newfirst->x = first->x;
 	case 'a':
-	case 's';
-	case 'd';
+		newfirst->y = first->y;
+		newfirst->x = first->x - 1;
+	case 's':
+		newfirst->y = first->y - 1;
+		newfirst->x = first->x;
+	case 'd':
+		newfirst->y = first->y;
+		newfirst->x = first->x + 1;
 	default:
 		return NULL;
 	}
@@ -113,6 +124,6 @@ void settings()
 		}
 	}
 	print_array[TEMPx][TEMPy] = '@'; TEMPy--;
-	print_array[TEMPx][TEMPy] = '█'; TEMPy--; 
+	print_array[TEMPx][TEMPy] = '█'; TEMPy--;
 	print_array[TEMPx][TEMPy] = '█';
 }
