@@ -17,13 +17,13 @@ struct NODE
 void list_delete();
 struct NODE *insert(const char direction, NODE *first);
 void list_check();							//检验碰撞
-//边框
 void print_frame();
-//初始化
-void settings();
+int settings();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	int Nowtime, Pretime;
+	char
 	settings();
 	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"), 
 		TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
@@ -35,6 +35,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	while (1)
 	{
 		print_frame();
+		if (kbhit())
+		{
+			direction = getch();
+
+		}
+		
+
 	}
 	exit:
 	system("pause");
@@ -48,7 +55,7 @@ void list_check()
 }
 
 
-void list_delete()
+NODE* list_delete()
 {
 
 }
@@ -64,8 +71,8 @@ NODE *insert(const char direction, NODE *first)
 		first->pre = newfirst;
 		newfirst
 	case 'a':
-	case 's';
-	case 'd';
+	case 's':
+	case 'd':
 	default:
 		return NULL;
 	}
@@ -85,7 +92,7 @@ void print_frame()
 }
 
 
-void settings()
+int settings()
 {
 	int i, j, z,TEMPx,TEMPy;
 	TEMPx = 0.5*X_MAX;
@@ -115,4 +122,29 @@ void settings()
 	print_array[TEMPx][TEMPy] = '@'; TEMPy--;
 	print_array[TEMPx][TEMPy] = '█'; TEMPy--; 
 	print_array[TEMPx][TEMPy] = '█';
+
+	//初始链表创建
+	struct NODE* pNew;
+	struct NODE* pHead;
+	struct NODE* pEnd;
+	//the first op
+	pEnd = pNew = (struct NODE*)malloc(sizeof(struct NODE));
+	(pNew->x) = 7; (pNew->y) = 7;
+	pNew->next = pHead;
+	pEnd = pNew;
+	pHead = pNew;
+	//the second op
+	pNew = (struct NODE*)malloc(sizeof(struct NODE));
+	(pNew->x) = 7; (pNew->y) = 6;
+	pNew->next = NULL;
+	pEnd->next = pNew;
+	pHead = pNew;
+	//the second op
+	pNew = (struct NODE*)malloc(sizeof(struct NODE));
+	(pNew->x) = 7; (pNew->y) = 5;
+	pNew->next = NULL;
+	pEnd->next = pNew;
+	pHead = pNew;
+	free(pNew);
+	return pHead;
 }
