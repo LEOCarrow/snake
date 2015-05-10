@@ -14,17 +14,8 @@ struct NODE
 	NODE* pre;
 	NODE* next;
 };												//双向链表结构
-
-class list
-{
-	NODE* head;
-	NODE* tail;
-public:
-	list(){ head = NULL; tail = NULL; }			//头指针与尾指针初始化
-	void list_insert(char direction);			//添加
-	void list_delete();							//删除
-};
-
+void list_delete();
+struct NODE *insert(const char direction, NODE *first);
 void list_check();							//检验碰撞
 //边框
 void print_frame();
@@ -41,8 +32,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	case IDYES: break;
 	case IDNO:goto exit;
 	}
-
-	print_frame();
+	while (1)
+	{
+		print_frame();
+	}
 	exit:
 	system("pause");
 	return 0;
@@ -55,7 +48,7 @@ void list_check()
 }
 
 
-void list::list_delete()
+void list_delete()
 {
 
 }
