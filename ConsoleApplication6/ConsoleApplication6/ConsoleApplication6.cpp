@@ -48,12 +48,15 @@ void list_check()
 }
 
 
-void list_delete()
+NODE *list_delete(NODE *previous,NODE *last)
 {
-
+	free(last);
+	last = NULL;
+	previous->next = NULL;
+	return previous;
 }
 
-NODE *insert(const char direction, NODE *first)
+NODE *list_insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
