@@ -13,7 +13,6 @@
 #include <Windows.h>
 #include <time.h>
 
-
 #define X_MAX 15
 #define Y_MAX 15
 #define TIME_DELAY 1

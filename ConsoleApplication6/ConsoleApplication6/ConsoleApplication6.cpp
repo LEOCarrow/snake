@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 char print_array[X_MAX][Y_MAX];
-char direction;
+char direction,temp;
 bool if_get_fruit=0;
 using namespace std;
 
@@ -23,7 +23,8 @@ NODE* settings();
 int _tmain(int argc, _TCHAR* argv[])
 {
 	int Nowtime, Pretime;
-	settings();
+	NODE *pHead,*pEnd;
+	pHead = settings();
 	int Me_result = MessageBox(NULL, TEXT("press OK to start\npress cancel to exit"),
 		TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
 	switch (Me_result)
@@ -31,14 +32,26 @@ int _tmain(int argc, _TCHAR* argv[])
 	case IDYES: break;
 	case IDNO:goto exit;
 	}
+	pEnd = pHead;
+	while (pEnd != NULL)
+	{
+		pEnd->next;
+	}
+	print_frame();
 	while (1)
 	{
-		print_frame();
 		if (_kbhit())
 		{
-			direction = _getch();
-
+			temp = _getch();
+			if (temp == 'w' || temp == 's' || temp == 'a' || temp == 'd')
+				direction = temp;
 		}
+		pEnd = list_delete();
+		insert(direction,pHead);
+		list_check();
+		print_frame();
+		Pretime = clock();
+			continue;
 	}
 	exit:
 	system("pause");
@@ -103,8 +116,8 @@ void print_frame()
 NODE* settings()
 {
 	int i, j, z,TEMPx,TEMPy;
-	TEMPx = 0.5*X_MAX;
-	TEMPy = 0.5*Y_MAX;
+	TEMPx = int(0.5*X_MAX);
+	TEMPy = int(0.5*Y_MAX);
 	for (i = 0; i < 15; i++)
 	{
 		for (j = 0; j < 15; j++)
