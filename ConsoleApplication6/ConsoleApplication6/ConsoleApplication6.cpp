@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 char print_array[X_MAX][Y_MAX];
 static char direction,temp;
@@ -21,11 +21,8 @@ NODE* settings();
 int _tmain(int argc, _TCHAR* argv[])
 {
 	int Nowtime, Pretime,index;
-	NODE *pHead = NULL,*pEnd = NULL;
-	if (!(pHead = settings())) {
-		printf("Initialization Faild\n", );
-		exit(-1);
-	}
+	NODE *pHead,*pEnd;
+	pHead = settings();
 	pEnd = pHead;
 	int Me_result = MessageBox(NULL,
 			TEXT("press OK to start\npress cancel to exit"),
@@ -77,7 +74,7 @@ void list_check(NODE *first)
 {
 	NODE *current = first;
 	while (current != NULL) {
-
+		
 	}
 }
 
@@ -174,9 +171,9 @@ NODE* settings()
 	print_array[TEMPx][TEMPy] = '█';
 
 	//初始链表创建
-	struct NODE* pNew = NULL;
+	struct NODE* pNew;
 	struct NODE* pHead = NULL;
-	struct NODE* pEnd = NULL;
+	struct NODE* pEnd;
 	//the first op
 	pEnd = pNew = (struct NODE*)malloc(sizeof(struct NODE));
 	if (!pNew) {
