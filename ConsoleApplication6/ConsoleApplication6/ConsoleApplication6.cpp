@@ -1,13 +1,13 @@
 ﻿#include "stdafx.h"
-
 char print_array[X_MAX][Y_MAX];
+
 static char direction,temp;
-static bool if_get_fruit = FALSE;
+static int if_get_fruit = 0;
 using namespace std;
 
 struct NODE
 {
-	int x,y;
+	int x, y;
 	NODE* pre;
 	NODE* next;
 };
@@ -39,6 +39,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	print_frame();
 	while (1)
 	{
+		system("cls");
 		if (_kbhit())
 		{
 			temp = _getch();
@@ -70,11 +71,13 @@ exit:
 }
 
 
+
+
 void list_check(NODE *first)
 {
 	NODE *current = first;
 	while (current != NULL) {
-		
+
 	}
 }
 
@@ -141,7 +144,7 @@ void print_frame()
 
 NODE* settings()
 {
-	int i, j, z,TEMPx,TEMPy;
+	int i, j, z, TEMPx, TEMPy;
 	TEMPx = int(0.5*X_MAX);
 	TEMPy = int(0.5*Y_MAX);
 	for (i = 0; i < 15; i++)
@@ -170,7 +173,7 @@ NODE* settings()
 	print_array[TEMPx][TEMPy] = '█'; TEMPy--;
 	print_array[TEMPx][TEMPy] = '█';
 
-	//初始链表创建
+	//双向链表创建
 	struct NODE* pNew;
 	struct NODE* pHead = NULL;
 	struct NODE* pEnd;
@@ -198,7 +201,7 @@ NODE* settings()
 	pNew->next = NULL;
 	pEnd->next = pNew;
 	pHead = pNew;
-	//the second op
+	//the third op
 	pNew = (struct NODE*)malloc(sizeof(struct NODE));
 	if (!pNew) {
 		printf("Memory calloc F\n");
