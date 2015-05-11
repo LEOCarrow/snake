@@ -13,7 +13,7 @@ struct NODE
 };
 										//双向链表结构
 NODE* list_delete(NODE *last);
-NODE* insert(const char direction, NODE *first);
+NODE* insert(char direction, NODE *first);
 void list_check(NODE *first);							//检验碰撞
 void print_frame();
 NODE* settings();
