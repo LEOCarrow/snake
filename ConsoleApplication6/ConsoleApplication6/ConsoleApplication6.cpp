@@ -247,13 +247,12 @@ NODE* settings()
 // 生成水果
 Present gen_fruit(const NODE *first) {
 	Present fruit;
-	bool isok == FALSE;
-	while (!isok) {
+	while (TRUE) {
 		// 在1到X/Y_MAX之间取数
 		srand(time(NULL));
-		fruit.x = 1 + rand() % X_MAX;
+		fruit.x = 1 + rand() % (X_MAX - 1);
 		srand(time(NULL));
-		fruit.y = 1 + rand() % Y_MAX;
+		fruit.y = 1 + rand() % (Y_MAX - 1);
 
 		// 检查是否在蛇身上
 		NODE *current = first->next;
