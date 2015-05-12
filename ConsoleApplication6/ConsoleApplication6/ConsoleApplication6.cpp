@@ -69,7 +69,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					direction = temp;
 			}
 			Nowtime = clock();
-			if ((Nowtime - Pretime) >= TIME_DELAY)
+			if (difftime(Nowtime,Pretime) >= TIME_DELAY)
 				break;
 		}
 	}
