@@ -5,24 +5,35 @@ static char direction,temp;
 static int if_get_fruit = 0;
 using namespace std;
 
-struct NODE
+struct NODE				//双向链表结构
 {
 	int x, y;
 	NODE* pre;
 	NODE* next;
 };
-										//双向链表结构
-NODE* list_delete(NODE *last);
-NODE* insert(const char direction, NODE *first);
-void list_check(NODE *first);							//检验碰撞
+
+struct Present
+{
+	int x,y;
+};
+
+struct NODE* list_delete(NODE *last);
+NODE* list_insert(const char direction, NODE *first);
+short hitCheck(const NODE *first, int fruit_x, int fruit_y);							//检验碰撞
 void print_frame();
 NODE* settings();
+Present gen_fruit(const NODE *first);
 
-int _tmain(int argc, _TCHAR* argv[])
+int main()
 {
 	int Nowtime, Pretime,index;
-	NODE *pHead,*pEnd;
-	pHead = settings();
+	Present fruit;
+	fruit.x = 0; fruit.y = 0;
+	NODE *pHead = NULL,*pEnd = NULL;
+	if (!(pHead = settings())) {
+		printf("Initialization Faild\n");
+		exit(-1);
+	}
 	pEnd = pHead;
 	int Me_result = MessageBox(NULL,
 			TEXT("press OK to start\npress cancel to exit"),
@@ -47,8 +58,8 @@ int _tmain(int argc, _TCHAR* argv[])
 				direction = temp;
 		}
 		pEnd = list_delete(pEnd);
-		pHead = insert(direction,pHead);
-		list_check(pHead);
+		pHead = list_insert(direction,pHead);
+		hitCheck(pHead, fruit.x, fruit.y);
 		print_frame();
 		Pretime = clock();
 		for (index = 0;; index++)
@@ -70,16 +81,34 @@ exit:
 	return 0;
 }
 
-
-
-
-void list_check(NODE *first)
+// 撞墙返回0，撞自己返回1，撞果子返回2，啥都没撞返回3
+short hitCheck(const NODE *first,int fruit_x, int fruit_y)
 {
-	NODE *current = first;
-	while (current != NULL)
-	{
+	int head_x = first->x, head_y = first->y;
+	int body_x = 0, body_y = 0;
+
+	// 吃到果子
+	if (head_x == fruit_x && head_y == fruit_y) {
+		return 2;
+	}
+
+	// 撞墙
+	if (head_y == 0 || head_y == Y_MAX ||
+				head_x == 0 || head_x == X_MAX) {
+		return 0;
+	}
+
+	// 撞自己
+	NODE *current = first->next;
+	while (current != NULL) {
+		if (head_x == current->x && head_y == current->y)
+			return 1;
+		current = current->next;
 
 	}
+
+	// 啥都没撞
+	return 3;
 }
 
 NODE *list_delete(NODE* last)
@@ -92,7 +121,7 @@ NODE *list_delete(NODE* last)
 	free(last);
 }
 
-NODE *insert(const char direction, NODE *first)
+NODE *list_insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
@@ -174,10 +203,10 @@ NODE* settings()
 	print_array[TEMPx][TEMPy] = '█'; TEMPy--;
 	print_array[TEMPx][TEMPy] = '█';
 
-	//双向链表创建
-	struct NODE* pNew;
+	//初始链表创建
+	struct NODE* pNew = NULL;
 	struct NODE* pHead = NULL;
-	struct NODE* pEnd;
+	struct NODE* pEnd = NULL;
 	//the first op
 	pEnd = pNew = (struct NODE*)malloc(sizeof(struct NODE));
 	if (!pNew) {
@@ -216,4 +245,25 @@ NODE* settings()
 	pHead = pNew;
 	free(pNew);
 	return pHead;
+}
+
+// 生成水果
+Present gen_fruit(const NODE *first) {
+	Present fruit;
+	while (TRUE) {
+		// 在1到X/Y_MAX之间取数
+		srand(time(NULL));
+		fruit.x = 1 + rand() % (X_MAX - 1);
+		srand(time(NULL));
+		fruit.y = 1 + rand() % (Y_MAX - 1);
+
+		// 检查是否在蛇身上
+		NODE *current = first->next;
+		while (current != NULL) {
+			if (fruit.x == current->x && fruit.y == current->y)
+				break;
+			current == current->next;
+		}
+	}
+	return fruit;
 }
