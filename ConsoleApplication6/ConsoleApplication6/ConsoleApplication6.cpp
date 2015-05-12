@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
-char print_array[X_MAX][Y_MAX];
 
+char print_array[X_MAX][Y_MAX];
 static char direction,temp;
 static int if_get_fruit = 0;
 using namespace std;
@@ -29,7 +29,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
 	switch (Me_result)
 	{
-		case IDYES: break;
+		case IDYES:break;
 		case IDNO:goto exit;
 	}
 	while (pEnd != NULL)
@@ -60,7 +60,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					direction = temp;
 			}
 			Nowtime = clock();
-			if ((Nowtime - Pretime) >= TIME_DELAY)
+			if (difftime(Nowtime,Pretime) >= TIME_DELAY)
 				break;
 		}
 	}
@@ -76,7 +76,8 @@ exit:
 void list_check(NODE *first)
 {
 	NODE *current = first;
-	while (current != NULL) {
+	while (current != NULL)
+	{
 
 	}
 }
