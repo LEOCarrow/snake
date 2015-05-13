@@ -26,7 +26,7 @@ Present gen_fruit(const NODE *first);
 
 int main()
 {
-	int Nowtime, Pretime,index;
+	int Nowtime, Pretime;
 	Present fruit;
 	fruit.x = 0; fruit.y = 0;
 	NODE *pHead = NULL,*pEnd = NULL;
@@ -62,7 +62,7 @@ int main()
 		hitCheck(pHead, fruit.x, fruit.y);
 		print_frame();
 		Pretime = clock();
-		for (index = 0;; index++)
+		for (;;)
 		{
 			if (_kbhit())
 			{
