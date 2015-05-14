@@ -42,6 +42,7 @@ int main()
 	} else {
 		return 0;
 	}
+	fflush(stdin);
 
 	while (pEnd != NULL)
 	{
