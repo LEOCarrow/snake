@@ -166,7 +166,7 @@ void print_frame()
 	for (i = 0; i < 15; i++)
 	{
 		for (index = 0; index < 15; index++)
-			printf("%c", print_array[i][index]);;;;;
+			printf("%c", print_array[i][index]);
 		printf("\n");
 	}
 }
