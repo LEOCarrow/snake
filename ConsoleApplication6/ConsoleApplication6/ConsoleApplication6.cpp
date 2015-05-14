@@ -25,16 +25,9 @@ struct Coordinate gen_fruit(const NODE *first);
 
 int main()
 {
-<<<<<<< HEAD
 	int Nowtime, Pretime,index;
 	struct Coordinate fruit = {0, 0};
 	struct NODE *pHead = NULL, *pEnd = NULL;
-=======
-	int Nowtime, Pretime;
-	Present fruit;
-	fruit.x = 0; fruit.y = 0;
-	NODE *pHead = NULL,*pEnd = NULL;
->>>>>>> upstream/master
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
 		exit(-1);
