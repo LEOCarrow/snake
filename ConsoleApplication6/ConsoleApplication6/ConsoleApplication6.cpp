@@ -1,8 +1,13 @@
 ﻿#include "stdafx.h"
 
-char print_array[X_MAX][Y_MAX];
+char print_array[Y_MAX][X_MAX];
 static char direction,temp;
 using namespace std;
+
+struct Coordinate			//点坐标
+{
+	int x,y;
+};
 
 struct NODE				//双向链表结构
 {
@@ -11,14 +16,9 @@ struct NODE				//双向链表结构
 	NODE* next;
 };
 
-struct Coordinate
-{
-	int x,y;
-};
-
 struct NODE* list_delete(NODE *last);
 struct NODE* list_insert(const char direction, NODE *first);
-short hitCheck(const NODE *first, int fruit_x, int fruit_y);	//检验碰撞
+short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
 void print_frame();
 struct NODE* settings();
 struct Coordinate gen_fruit(const NODE *first);
@@ -60,7 +60,7 @@ int main()
 		}
 		pEnd = list_delete(pEnd);
 		pHead = list_insert(direction,pHead);
-		hitCheck(pHead, fruit.x, fruit.y);
+		hitCheck(pHead, fruit);
 		print_frame();
 		Pretime = clock();
 		for (;;)
@@ -84,26 +84,24 @@ int main()
 }
 
 // 撞墙返回0，撞自己返回1，撞果子返回2，啥都没撞返回3
-short hitCheck(const NODE *first,int fruit_x, int fruit_y)
+short hitCheck(const NODE *first,struct Coordinate fruit)
 {
-	int head_x = first->x, head_y = first->y;
+	int head_x = first->coord.x, head_y = first->coord.y;
 	int body_x = 0, body_y = 0;
 
 	// 吃到果子
-	if (head_x == fruit_x && head_y == fruit_y) {
+	if (head_x == fruit.x && head_y == fruit.y)
 		return 2;
-	}
 
 	// 撞墙
 	if (head_y == 0 || head_y == Y_MAX ||
-				head_x == 0 || head_x == X_MAX) {
+				head_x == 0 || head_x == X_MAX)
 		return 0;
-	}
 
 	// 撞自己
 	NODE *current = first->next;
 	while (current != NULL) {
-		if (head_x == current->x && head_y == current->y)
+		if (head_x == current->coord.x && head_y == current->coord.y)
 			return 1;
 		current = current->next;
 
@@ -115,17 +113,17 @@ short hitCheck(const NODE *first,int fruit_x, int fruit_y)
 
 struct NODE *list_delete(NODE* last)
 {
-	NODE *temp;
-	print_array[last->x][last->y] = ' ';
+	struct NODE *temp;
+	print_array[last->coord.y][last->coord.x] = ' ';
 	temp = last->pre;
 	temp->next = NULL;
-	return temp;
 	free(last);
+	return temp;
 }
 
 struct NODE *list_insert(const char direction, NODE *first)
 {
-	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
+	struct NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
 		printf("Memory calloc F\n");
 		return NULL;
@@ -136,24 +134,24 @@ struct NODE *list_insert(const char direction, NODE *first)
 
 	switch (direction) {
 	case 'w':
-		newfirst->y = first->y + 1;
-		newfirst->x = first->x;
-		print_array[newfirst->x][newfirst->y = '█'];
+		newfirst->coord.y = (first->coord.y) + 1;
+		newfirst->coord.x = first->coord.x;
+		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
 		break;
 	case 'a':
-		newfirst->y = first->y;
-		newfirst->x = first->x - 1;
-		print_array[newfirst->x][newfirst->y] = '█';
+		newfirst->coord.y = first->coord.y;
+		newfirst->coord.x = (first->coord.x) - 1;
+		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
 		break;
 	case 's':
-		newfirst->y = first->y - 1;
-		newfirst->x = first->x;
-		print_array[newfirst->x][newfirst->y] = '█';
+		newfirst->coord.y = (first->coord.y) - 1;
+		newfirst->coord.x = first->coord.x;
+		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
 		break;
 	case 'd':
-		newfirst->y = first->y;
-		newfirst->x = first->x + 1;
-		print_array[newfirst->x][newfirst->y] = '█';
+		newfirst->coord.y = first->coord.y;
+		newfirst->coord.x = (first->coord.x) + 1;
+		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
 		break;
 	default:
 		return NULL;
@@ -165,9 +163,9 @@ struct NODE *list_insert(const char direction, NODE *first)
 void print_frame()
 {
 	int i, index;
-	for (i = 0; i < 15; i++)
+	for (i = 0; i < Y_MAX; i++)
 	{
-		for (index = 0; index < 15; index++)
+		for (index = 0; index < X_MAX; index++)
 			printf("%c", print_array[i][index]);
 		printf("\n");
 	}
@@ -179,31 +177,21 @@ struct NODE* settings()
 	int i, j, z, TEMPx, TEMPy;
 	TEMPx = int(0.5*X_MAX);
 	TEMPy = int(0.5*Y_MAX);
-	for (i = 0; i < 15; i++)
-	{
-		for (j = 0; j < 15; j++)
-		{
-			if (i == 0 || i == 14)
-			{
-				for (j = 0; j < 15; j++)
-				{
-					print_array[i][j] = '.';
-				}
-			}
-			else
-			{
-				print_array[i][0] = '.';
-				for (z = 1; z < 14; z++)
-				{
-					print_array[i][z] = ' ';
-				}
-				print_array[i][14] = '.';
-			}
+
+	// 初始化墙和虫
+	for (size_t i = 0; i < X_MAX; i++)		// 最上面一排
+		print_array[0][i] = '-';
+	for (size_t i = 0; i < X_MAX; i++)		// 最下面一排
+		print_array[Y_MAX - 1][i] = '-';
+	for (size_t i = 1; i < (Y_MAX - 1); i++) {	// 最左边和最右边一排
+		print_array[i][0] = '|';
+		print_array[i][X_MAX - 1] = '|';
+	}
+	for (size_t i = 1; i < (Y_MAX - 1); i++) {	// 其余部分
+		for (size_t j = 1; j < (X_MAX - 1); j++) {
+			print_array[i][j] = ' ';
 		}
 	}
-	print_array[TEMPx][TEMPy] = '@'; TEMPy--;
-	print_array[TEMPx][TEMPy] = '█'; TEMPy--;
-	print_array[TEMPx][TEMPy] = '█';
 
 	//初始链表创建
 	struct NODE* pNew = NULL;
@@ -215,7 +203,8 @@ struct NODE* settings()
 		printf("Memory calloc F\n");
 		return NULL;
 	}
-	(pNew->x) = 7; (pNew->y) = 7;
+	(pNew->coord.x) = TEMPx; (pNew->coord.y) = TEMPy;
+	print_array[TEMPy][TEMPx] = '@'; TEMPy--;
 	pNew->next = pHead;
 	pEnd = pNew;
 	pHead = pNew;
@@ -228,7 +217,8 @@ struct NODE* settings()
 	}
 
 	pNew->pre = pEnd;
-	(pNew->x) = 7; (pNew->y) = 6;
+	(pNew->coord.x) = TEMPx; (pNew->coord.y) = TEMPy;
+	print_array[TEMPy][TEMPx] = '█'; TEMPy--;
 	pNew->pre = NULL;
 	pNew->next = NULL;
 	pEnd->next = pNew;
@@ -241,7 +231,8 @@ struct NODE* settings()
 	}
 
 	pNew->pre = pEnd;
-	(pNew->x) = 7; (pNew->y) = 5;
+	(pNew->coord.x) = TEMPx; (pNew->coord.y) = TEMPy;
+	print_array[TEMPy][TEMPx] = '█';
 	pNew->next = NULL;
 	pEnd->next = pNew;
 	pHead = pNew;
@@ -251,7 +242,7 @@ struct NODE* settings()
 
 // 生成水果
 struct Coordinate gen_fruit(const NODE *first) {
-	Coordinate fruit;
+	struct Coordinate fruit;
 	while (TRUE) {
 		// 在1到X/Y_MAX之间取数
 		srand(time(NULL));
