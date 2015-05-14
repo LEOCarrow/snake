@@ -58,6 +58,7 @@ int main()
 			if (temp == 'w' || temp == 's' ||
 					temp == 'a' || temp == 'd')
 				direction = temp;
+			fflush(stdin);
 		}
 		pEnd = list_delete(pEnd);
 		pHead = list_insert(direction,pHead);
