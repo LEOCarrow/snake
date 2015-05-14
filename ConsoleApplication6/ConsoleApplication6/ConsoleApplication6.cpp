@@ -250,7 +250,7 @@ NODE* settings()
 // 生成水果
 Present gen_fruit(const NODE *first) {
 	Present fruit;
-	while (TRUE) {
+re_fruit:
 		// 在1到X/Y_MAX之间取数
 		srand(time(NULL));
 		fruit.x = 1 + rand() % (X_MAX - 1);
@@ -261,9 +261,8 @@ Present gen_fruit(const NODE *first) {
 		NODE *current = first->next;
 		while (current != NULL) {
 			if (fruit.x == current->x && fruit.y == current->y)
-				break;
+				goto re_fruit;
 			current == current->next;
 		}
-	}
 	return fruit;
 }
