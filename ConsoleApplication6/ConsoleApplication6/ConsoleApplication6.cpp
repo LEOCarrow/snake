@@ -2,47 +2,47 @@
 
 char print_array[X_MAX][Y_MAX];
 static char direction,temp;
-static int if_get_fruit = 0;
 using namespace std;
 
 struct NODE				//双向链表结构
 {
-	int x, y;
+	Coordinate coord;
 	NODE* pre;
 	NODE* next;
 };
 
-struct Present
+struct Coordinate
 {
 	int x,y;
 };
 
 struct NODE* list_delete(NODE *last);
-NODE* list_insert(const char direction, NODE *first);
-short hitCheck(const NODE *first, int fruit_x, int fruit_y);							//检验碰撞
+struct NODE* list_insert(const char direction, NODE *first);
+short hitCheck(const NODE *first, int fruit_x, int fruit_y);	//检验碰撞
 void print_frame();
-NODE* settings();
-Present gen_fruit(const NODE *first);
+struct NODE* settings();
+struct Coordinate gen_fruit(NODE *first);
 
 int main()
 {
-	int Nowtime, Pretime;
-	Present fruit;
-	fruit.x = 0; fruit.y = 0;
-	NODE *pHead = NULL,*pEnd = NULL;
+	int Nowtime, Pretime,index;
+	struct Coordinate fruit = {0, 0};
+	struct NODE *pHead = NULL, *pEnd = NULL;
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
 		exit(-1);
 	}
 	pEnd = pHead;
-	int Me_result = MessageBox(NULL,
-			TEXT("press OK to start\npress cancel to exit"),
-			TEXT("game"), MB_ICONINFORMATION | MB_YESNO);
-	switch (Me_result)
-	{
-		case IDYES:break;
-		case IDNO:goto exit;
+	//pointers
+	printf("The Gluttonous Snake Game\n");
+	printf("\nPress enter to start\nPress anykey to EXIT\n");
+	char answer = getchar();
+	if (answer == '\n') {
+		printf("Ready Go!\n");
+	} else {
+		goto EXIT;
 	}
+
 	while (pEnd != NULL)
 	{
 		pEnd->next;
@@ -54,7 +54,8 @@ int main()
 		if (_kbhit())
 		{
 			temp = _getch();
-			if (temp == 'w' || temp == 's' || temp == 'a' || temp == 'd')
+			if (temp == 'w' || temp == 's' ||
+					temp == 'a' || temp == 'd')
 				direction = temp;
 		}
 		pEnd = list_delete(pEnd);
@@ -67,7 +68,7 @@ int main()
 			if (_kbhit())
 			{
 				temp = _getch();
-				if (temp == 'w' || temp == 's' || temp == 'a' || temp == 'd')
+				if (temp == 'w' || temp == 's' ||temp == 'a' || temp == 'd')
 					direction = temp;
 			}
 			Nowtime = clock();
@@ -75,9 +76,9 @@ int main()
 				break;
 		}
 	}
-exit:
-	free(pHead);	 free(pEnd);
-	system("pause");
+EXIT:
+		free(pHead);	 free(pEnd);
+		system("pause");
 	return 0;
 }
 
@@ -111,7 +112,7 @@ short hitCheck(const NODE *first,int fruit_x, int fruit_y)
 	return 3;
 }
 
-NODE *list_delete(NODE* last)
+struct NODE *list_delete(NODE* last)
 {
 	NODE *temp;
 	print_array[last->x][last->y] = ' ';
@@ -121,7 +122,7 @@ NODE *list_delete(NODE* last)
 	free(last);
 }
 
-NODE *list_insert(const char direction, NODE *first)
+struct NODE *list_insert(const char direction, NODE *first)
 {
 	NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
@@ -172,7 +173,7 @@ void print_frame()
 }
 
 
-NODE* settings()
+struct NODE* settings()
 {
 	int i, j, z, TEMPx, TEMPy;
 	TEMPx = int(0.5*X_MAX);
@@ -248,9 +249,10 @@ NODE* settings()
 }
 
 // 生成水果
-Present gen_fruit(const NODE *first) {
-	Present fruit;
+Coordinate gen_fruit(NODE *first) {
+	Coordinate fruit;
 re_fruit:
+	while (1) {
 		// 在1到X/Y_MAX之间取数
 		srand(time(NULL));
 		fruit.x = 1 + rand() % (X_MAX - 1);
@@ -262,6 +264,8 @@ re_fruit:
 		while (current != NULL) {
 			if (fruit.x == current->x && fruit.y == current->y)
 				goto re_fruit;
+			if (fruit.x == current->x &&fruit.y == current->y)
+				break;
 			current == current->next;
 		}
 	return fruit;
