@@ -1,5 +1,5 @@
-﻿#include "stdafx.h"
 #pragma once
+#include "stdafx.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,9 +12,9 @@
 #define TIME_DELAY 1
 
 
-char print_array[Y_MAX][X_MAX];
+extern char print_array[Y_MAX][X_MAX];
+static unsigned int score = 0;
 static char direction;
-unsigned int score = 0;
 using namespace std;
 
 struct Coordinate			//点坐标
@@ -28,7 +28,7 @@ struct NODE				//双向链表结构
 	NODE* next;
 };
 void list_delete(NODE *pHead);
-struct NODE* list_insert(const char direction, NODE *first);
+struct NODE* list_insert(NODE *first);
 short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
 void print_frame();
 void delay();
@@ -40,7 +40,8 @@ int main()
 {
 	struct Coordinate fruit = {0, 0};
 	struct NODE *pHead;
-	short hit_re;
+	short hit_re = 3;
+	int answer = '\0';
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
 		exit(-1);
@@ -48,8 +49,7 @@ int main()
 	//pointers
 	printf("The Gluttonous Snake Game\n");
 	printf("\nPress enter to start\nPress anykey to EXIT\n");
-	char answer = getchar();
-	if (answer == '\n') {
+	if ((answer = getchar()) == '\n') {
 		system("cls");
 	} else {
 		goto EXIT;
@@ -60,16 +60,21 @@ int main()
 	//loop
 	while (1)
 	{
-		
+
 		fflush(stdin);
-		pHead = list_insert(direction,pHead);
+		pHead = list_insert(pHead);
 		list_delete(pHead);
 		hit_re = hitCheck(pHead, fruit);
 		switch (hit_re)
 		{
-			case 3:break;
-			case 2:++score;		printf("\a");	 break;
-			case 1:goto EXIT; break;
+			case 3:
+				break;
+			case 2:
+				++score;
+				printf("\a");
+				break;
+			case 1:
+				goto EXIT;
 		}
 		system("cls");
 		print_frame();
@@ -115,7 +120,7 @@ void list_delete(NODE* pHead)
 	free(_TEMP);
 }
 
-struct NODE *list_insert(const char direction, NODE *first)
+struct NODE *list_insert(NODE *first)
 {
 	struct NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
@@ -130,22 +135,22 @@ struct NODE *list_insert(const char direction, NODE *first)
 	case 'w':
 		newfirst->coord.y = (first->coord.y) + 1;
 		newfirst->coord.x = first->coord.x;
-		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
+		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
 		break;
 	case 'a':
 		newfirst->coord.y = first->coord.y;
 		newfirst->coord.x = (first->coord.x) - 1;
-		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
+		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
 		break;
 	case 's':
 		newfirst->coord.y = (first->coord.y) - 1;
 		newfirst->coord.x = first->coord.x;
-		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
+		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
 		break;
 	case 'd':
 		newfirst->coord.y = first->coord.y;
 		newfirst->coord.x = (first->coord.x) + 1;
-		print_array[newfirst->coord.y][newfirst->coord.x] = '█';
+		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
 		break;
 	default:
 		return NULL;
@@ -166,9 +171,9 @@ void print_frame()
 
 struct NODE* settings()
 {
-	int i, TEMPx, TEMPy;
-	TEMPx = int(0.5*X_MAX);
-	TEMPy = int(0.5*Y_MAX);
+	int TEMPx, TEMPy;
+	TEMPx = int(X_MAX / 2);
+	TEMPy = int(Y_MAX / 2);
 
 	// 初始化墙和虫
 	for (size_t i = 0; i < X_MAX; i++)		// 最上面一排
@@ -186,17 +191,20 @@ struct NODE* settings()
 	}
 
 	//初始链表创建
-	print_array[7][7] = '@';
-	print_array[7][6] = '█';
-	print_array[7][5] = '█';
-	
+	print_array[TEMPy][TEMPx--] = '@';
+	print_array[TEMPy][TEMPx--] = 'O';
+	print_array[TEMPy][TEMPx] = 'O';
+	TEMPx = int(X_MAX / 2);
+	TEMPy = int(Y_MAX / 2);
+
+
 	NODE *p, *h, *l;
 	int n, x;
 	h = (NODE*)malloc(sizeof(NODE));
 	h->pre = NULL;			//当空的双向链表就像上图那样前驱和后驱都会指向自己；
 	h->next = NULL;
 	p = h;
-	for (i = 0; i < 3; i++)
+	for (size_t i = 0; i < 3; i++)
 	{
 		l = (NODE *)malloc(sizeof(NODE));
 		((l->coord).x) = TEMPx;	((l->coord).y) = TEMPy;		//赋值
@@ -225,7 +233,7 @@ re_fruit:
 		while (current != NULL) {
 			if (fruit.x == (current->coord).x && fruit.y == (current->coord).y)
 				goto re_fruit;
-			current == current->next;
+			current = current->next;
 		}
 	return fruit;
 }
