@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#include "stdafx.h"
+#pragma once
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,6 +10,7 @@
 #define X_MAX 15
 #define Y_MAX 15
 #define TIME_DELAY 1
+
 
 char print_array[Y_MAX][X_MAX];
 static char direction;
@@ -36,9 +38,8 @@ struct Coordinate gen_fruit(NODE *first);
 
 int main()
 {
-	int Nowtime, Pretime,index;
 	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead = NULL;
+	struct NODE *pHead;
 	short hit_re;
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
@@ -61,21 +62,21 @@ int main()
 	{
 		
 		fflush(stdin);
-		list_delete(pHead);
 		pHead = list_insert(direction,pHead);
+		list_delete(pHead);
 		hit_re = hitCheck(pHead, fruit);
 		switch (hit_re)
 		{
-		case 3:break;
-		case 2:++score;		printf("\a");	 break;
-		case 1:goto EXIT; break;
+			case 3:break;
+			case 2:++score;		printf("\a");	 break;
+			case 1:goto EXIT; break;
 		}
 		system("cls");
 		print_frame();
 		delay();
 	}
 EXIT:
-		free(pHead);	 free(pEnd);
+		free(pHead);
 		system("pause");
 	return 0;
 }
@@ -106,14 +107,12 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 void list_delete(NODE* pHead)
 {
 	NODE* TEMP,*_TEMP;
-	_TEMP = pHead;
-	pHead = pHead->pre;
-	TEMP = pHead->pre;
+	_TEMP = pHead->pre;
+	TEMP = _TEMP->pre;
 
-	print_array[pHead->coord.y][pHead->coord.x] = ' ';
+	print_array[_TEMP->coord.y][_TEMP->coord.x] = ' ';
 	TEMP->next = pHead;
-	temp->next = NULL;
-	free(last);
+	free(_TEMP);
 }
 
 struct NODE *list_insert(const char direction, NODE *first)
@@ -167,7 +166,7 @@ void print_frame()
 
 struct NODE* settings()
 {
-	int i, j, z, TEMPx, TEMPy;
+	int i, TEMPx, TEMPy;
 	TEMPx = int(0.5*X_MAX);
 	TEMPy = int(0.5*Y_MAX);
 
