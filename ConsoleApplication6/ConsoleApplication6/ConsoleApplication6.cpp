@@ -27,6 +27,7 @@ struct NODE				//双向链表结构
 	NODE* pre;
 	NODE* next;
 };
+
 void list_delete(NODE *pHead);
 struct NODE* list_insert(NODE *first);
 short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
@@ -80,7 +81,7 @@ int main()
 		print_frame();
 		delay();
 	}
-EXIT:
+	EXIT:
 		free(pHead);
 		system("pause");
 	return 0;
@@ -219,9 +220,10 @@ struct NODE* settings()
 
 }
 
-Coordinate gen_fruit(NODE *first) {
-	Coordinate fruit;
-re_fruit:
+struct Coordinate gen_fruit(NODE *first)
+{
+	struct Coordinate fruit;
+	re_fruit:
 		// 在1到X/Y_MAX之间取数
 		srand(time(NULL));
 		fruit.x = 1 + rand() % (X_MAX - 1);
