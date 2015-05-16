@@ -1,25 +1,36 @@
-﻿#include "stdafx.h"
+﻿#pragma once
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
+#include <conio.h>
+#include <time.h>
+
+#define X_MAX 15
+#define Y_MAX 15
+#define TIME_DELAY 1
 
 char print_array[Y_MAX][X_MAX];
-static char direction,temp;
+static char direction;
+unsigned int score = 0;
 using namespace std;
 
 struct Coordinate			//点坐标
 {
 	int x,y;
 };
-
 struct NODE				//双向链表结构
 {
 	Coordinate coord;
 	NODE* pre;
 	NODE* next;
 };
-
-struct NODE* list_delete(NODE *last);
+void list_delete(NODE *pHead);
 struct NODE* list_insert(const char direction, NODE *first);
 short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
 void print_frame();
+void delay();
+void kb_check();
 struct NODE* settings();
 struct Coordinate gen_fruit(NODE *first);
 
@@ -27,56 +38,41 @@ int main()
 {
 	int Nowtime, Pretime,index;
 	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead = NULL, *pEnd = NULL;
+	struct NODE *pHead = NULL;
+	short hit_re;
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
 		exit(-1);
 	}
-	pEnd = pHead;
 	//pointers
 	printf("The Gluttonous Snake Game\n");
 	printf("\nPress enter to start\nPress anykey to EXIT\n");
 	char answer = getchar();
 	if (answer == '\n') {
-		printf("Ready Go!\n");
+		system("cls");
 	} else {
 		goto EXIT;
 	}
 	fflush(stdin);
-
-	while (pEnd != NULL)
-	{
-		pEnd->next;
-	}
+	//first start
 	print_frame();
+	//loop
 	while (1)
 	{
-		system("cls");
-		if (_kbhit())
-		{
-			temp = _getch();
-			if (temp == 'w' || temp == 's' ||
-					temp == 'a' || temp == 'd')
-				direction = temp;
-			fflush(stdin);
-		}
-		pEnd = list_delete(pEnd);
+		
+		fflush(stdin);
+		list_delete(pHead);
 		pHead = list_insert(direction,pHead);
-		hitCheck(pHead, fruit);
-		print_frame();
-		Pretime = clock();
-		for (;;)
+		hit_re = hitCheck(pHead, fruit);
+		switch (hit_re)
 		{
-			if (_kbhit())
-			{
-				temp = _getch();
-				if (temp == 'w' || temp == 's' ||temp == 'a' || temp == 'd')
-					direction = temp;
-			}
-			Nowtime = clock();
-			if (difftime(Nowtime,Pretime) >= TIME_DELAY)
-				break;
+		case 3:break;
+		case 2:++score;		printf("\a");	 break;
+		case 1:goto EXIT; break;
 		}
+		system("cls");
+		print_frame();
+		delay();
 	}
 EXIT:
 		free(pHead);	 free(pEnd);
@@ -94,11 +90,6 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 	if (head_x == fruit.x && head_y == fruit.y)
 		return 2;
 
-	// 撞墙
-	if (head_y == 0 || head_y == Y_MAX ||
-				head_x == 0 || head_x == X_MAX)
-		return 0;
-
 	// 撞自己
 	NODE *current = first->next;
 	while (current != NULL) {
@@ -112,14 +103,17 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 	return 3;
 }
 
-struct NODE *list_delete(NODE* last)
+void list_delete(NODE* pHead)
 {
-	struct NODE *temp;
-	print_array[last->coord.y][last->coord.x] = ' ';
-	temp = last->pre;
+	NODE* TEMP,*_TEMP;
+	_TEMP = pHead;
+	pHead = pHead->pre;
+	TEMP = pHead->pre;
+
+	print_array[pHead->coord.y][pHead->coord.x] = ' ';
+	TEMP->next = pHead;
 	temp->next = NULL;
 	free(last);
-	return temp;
 }
 
 struct NODE *list_insert(const char direction, NODE *first)
@@ -160,7 +154,6 @@ struct NODE *list_insert(const char direction, NODE *first)
 	return newfirst;
 }
 
-
 void print_frame()
 {
 	int i, index;
@@ -171,7 +164,6 @@ void print_frame()
 		printf("\n");
 	}
 }
-
 
 struct NODE* settings()
 {
@@ -195,63 +187,34 @@ struct NODE* settings()
 	}
 
 	//初始链表创建
-	struct NODE* pNew = NULL;
-	struct NODE* pHead = NULL;
-	struct NODE* pEnd = NULL;
-	//the first op
-	pEnd = pNew = (struct NODE*)malloc(sizeof(struct NODE));
-	if (!pNew) {
-		printf("Memory calloc F\n");
-		return NULL;
+	print_array[7][7] = '@';
+	print_array[7][6] = '█';
+	print_array[7][5] = '█';
+	
+	NODE *p, *h, *l;
+	int n, x;
+	h = (NODE*)malloc(sizeof(NODE));
+	h->pre = NULL;			//当空的双向链表就像上图那样前驱和后驱都会指向自己；
+	h->next = NULL;
+	p = h;
+	for (i = 0; i < 3; i++)
+	{
+		l = (NODE *)malloc(sizeof(NODE));
+		((l->coord).x) = TEMPx;	((l->coord).y) = TEMPy;		//赋值
+		p->next = l;
+		l->pre = p;
+		l->next = h;      //注意，l->next链接的是头节点，　
+		h->pre = l;		//而头结点的前驱是l。 这样便构成了一个循环的双向链表
+		p = l;
+		TEMPy--;
 	}
-	(pNew->coord.x) = TEMPx; (pNew->coord.y) = TEMPy;
-	print_array[TEMPy][TEMPx] = '@'; TEMPy--;
-	pNew->next = pHead;
-	pEnd = pNew;
-	pHead = pNew;
-	pEnd->pre = NULL;
-	//the second op
-	pNew = (struct NODE*)malloc(sizeof(struct NODE));
-	if (!pNew) {
-		printf("Memory calloc F\n");
-		return NULL;
-	}
+	return (h);			//返回链表
 
-	pNew->pre = pEnd;
-	(pNew->coord.x) = TEMPx; (pNew->coord.y) = TEMPy;
-	print_array[TEMPy][TEMPx] = '█'; TEMPy--;
-	pNew->pre = NULL;
-	pNew->next = NULL;
-	pEnd->next = pNew;
-	pHead = pNew;
-	//the third op
-	pNew = (struct NODE*)malloc(sizeof(struct NODE));
-	if (!pNew) {
-		printf("Memory calloc F\n");
-		return NULL;
-	}
-
-	pNew->pre = pEnd;
-	(pNew->coord.x) = TEMPx; (pNew->coord.y) = TEMPy;
-	print_array[TEMPy][TEMPx] = '█';
-	pNew->next = NULL;
-	pEnd->next = pNew;
-	pHead = pNew;
-	free(pNew);
-	return pHead;
 }
 
-// 生成水果
-<<<<<<< HEAD
 Coordinate gen_fruit(NODE *first) {
 	Coordinate fruit;
 re_fruit:
-	while (1) {
-=======
-struct Coordinate gen_fruit(const NODE *first) {
-	struct Coordinate fruit;
-	while (TRUE) {
->>>>>>> eddab77832c97fbd9362f388df56ab3c15c90ad2
 		// 在1到X/Y_MAX之间取数
 		srand(time(NULL));
 		fruit.x = 1 + rand() % (X_MAX - 1);
@@ -261,11 +224,39 @@ struct Coordinate gen_fruit(const NODE *first) {
 		// 检查是否在蛇身上
 		NODE *current = first->next;
 		while (current != NULL) {
-			if (fruit.x == current->x && fruit.y == current->y)
+			if (fruit.x == (current->coord).x && fruit.y == (current->coord).y)
 				goto re_fruit;
-			if (fruit.x == current->x &&fruit.y == current->y)
-				break;
 			current == current->next;
 		}
 	return fruit;
+}
+
+inline void kb_check()
+{
+	char temp;
+	if (_kbhit())
+	{
+		temp = _getch();
+		switch (temp)
+		{
+		case 'w':if (direction != 's')
+			direction = 'w';
+		case 's':if (direction != 'w')
+			direction = 's';
+		case 'a':if (direction != 'd')
+			direction = 'a';
+		case 'd':if (direction != 'a')
+			direction = 'd';
+		}
+	}
+}
+
+void delay()
+{
+	time_t start_time, cur_time; // 变量声明
+	time(&start_time);
+	do {
+		kb_check();
+		time(&cur_time);
+	} while ((cur_time - start_time) < TIME_DELAY);
 }
