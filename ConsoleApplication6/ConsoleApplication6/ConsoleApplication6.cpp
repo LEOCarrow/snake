@@ -14,7 +14,7 @@
 
 extern char print_array[Y_MAX][X_MAX];
 static unsigned int score = 0;
-static char direction;
+static char direction = 'd';
 using namespace std;
 
 struct Coordinate			//点坐标
@@ -40,29 +40,28 @@ struct Coordinate gen_fruit(NODE *first);
 int main()
 {
 	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead;
+	struct NODE *pHead = NULL;
 	short hit_re = 3;
 	int answer = '\0';
-	if (!(pHead = settings())) {
-		printf("Initialization Faild\n");
-		exit(-1);
-	}
-	//pointers
 	printf("The Gluttonous Snake Game\n");
 	printf("\nPress enter to start\nPress anykey to EXIT\n");
 	if ((answer = getchar()) == '\n') {
 		system("cls");
 	} else {
-		goto EXIT;
+		return 0;
 	}
+
+	if (!(pHead = settings())) {
+		printf("Initialization Faild\n");
+		exit(-1);
+	}
+
 	fflush(stdin);
 	//first start
 	print_frame();
 	//loop
 	while (1)
 	{
-
-		fflush(stdin);
 		pHead = list_insert(pHead);
 		list_delete(pHead);
 		hit_re = hitCheck(pHead, fruit);
@@ -73,16 +72,29 @@ int main()
 			case 2:
 				++score;
 				printf("\a");
+				if (!(pHead = list_insert(pHead))) {
+					printf("Memory F\n");
+					exit(-1);
+				}
 				break;
 			case 1:
 				goto EXIT;
 		}
 		system("cls");
 		print_frame();
+		fflush(stdin);
 		delay();
 	}
 	EXIT:
-		free(pHead);
+		struct NODE *current = pHead;
+		while (current != NULL) {
+			current = current->next;
+			free(pHead);
+			pHead = current;
+
+		}
+		pHead = NULL;
+		current = NULL;
 		system("pause");
 	return 0;
 }
@@ -176,7 +188,7 @@ struct NODE* settings()
 	TEMPx = int(X_MAX / 2);
 	TEMPy = int(Y_MAX / 2);
 
-	// 初始化墙和虫
+	// 初始化墙和蛇
 	for (size_t i = 0; i < X_MAX; i++)		// 最上面一排
 		print_array[0][i] = '-';
 	for (size_t i = 0; i < X_MAX; i++)		// 最下面一排
@@ -248,14 +260,22 @@ inline void kb_check()
 		temp = _getch();
 		switch (temp)
 		{
-		case 'w':if (direction != 's')
-			direction = 'w';
-		case 's':if (direction != 'w')
-			direction = 's';
-		case 'a':if (direction != 'd')
-			direction = 'a';
-		case 'd':if (direction != 'a')
-			direction = 'd';
+		case 'w':
+			if (direction != 's')
+				direction = 'w';
+			break;
+		case 's':
+			if (direction != 'w')
+				direction = 's';
+			break;
+		case 'a':
+			if (direction != 'd')
+				direction = 'a';
+			break;
+		case 'd':
+			if (direction != 'a')
+				direction = 'd';
+			break;
 		}
 	}
 }
