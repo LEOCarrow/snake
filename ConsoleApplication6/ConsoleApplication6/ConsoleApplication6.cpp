@@ -17,7 +17,7 @@ struct NODE				//双向链表结构
 	NODE* next;
 };
 
-void list_delete(NODE *pHead);
+NODE* list_delete(NODE *pHead);
 struct NODE* list_insert(NODE *first,bool if_get_fruit);
 short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
 void print_frame();
@@ -52,7 +52,7 @@ int main()
 	{
 		fruit = gen_fruit(pHead);
 		pHead = list_insert(pHead,0);
-		list_delete(pHead);
+		pHead=list_delete(pHead);
 		hit_re = hitCheck(pHead, fruit);
 		switch (hit_re)
 		{
@@ -66,6 +66,7 @@ int main()
 					printf("Memory F\n");
 					exit(-1);
 				}
+				++snake_count;
 				break;
 			case 1:
 				goto EXIT;
@@ -92,8 +93,8 @@ int main()
 // 撞墙返回0，撞自己返回1，撞果子返回2，啥都没撞返回3
 short hitCheck(const NODE *first,struct Coordinate fruit)
 {
-	int head_x = (first->coord).x, head_y = (first->coord).y;
-	int body_x = 0, body_y = 0;
+	int head_x = (first->coord).x;
+	int head_y = (first->coord).y;
 
 	// 吃到果子
 	if (head_x == fruit.x && head_y == fruit.y)
@@ -101,7 +102,7 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 
 	// 撞自己
 	NODE *current = first->next;
-	while (current != NULL) {
+	for(int i=0;i<(snake_count-1);i++) {
 		if (head_x == (current->coord).x && head_y == (current->coord).y)
 			return 1;
 		current = current->next;
@@ -113,15 +114,16 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 	return 3;
 }
 
-void list_delete(NODE* pHead)
+NODE* list_delete(NODE* pHead)
 {
 	NODE* TEMP,*_TEMP;
-	_TEMP = pHead->pre;
-	TEMP = _TEMP->pre;
-	print_array[(_TEMP->coord).y][(_TEMP->coord).x] = ' ';
-	TEMP->next = pHead;
-	pHead->pre = TEMP;
-	free(_TEMP);
+	TEMP = pHead->pre;
+	_TEMP = TEMP->pre;
+	print_array[(TEMP->coord).y][(TEMP->coord).x] = ' ';
+	_TEMP->next = pHead;
+	pHead->pre = _TEMP;
+	free(TEMP);
+	return pHead;
 }
 
 struct NODE *list_insert(NODE *first,bool if_get_fruit)
@@ -133,10 +135,11 @@ struct NODE *list_insert(NODE *first,bool if_get_fruit)
 		return NULL;
 	}
 	end = first->pre;
-	newfirst = first->pre;
+	newfirst = first->next;
+	newfirst->pre = end;
 	newfirst->next = first;
-	newfirst->next = end;
-	end->pre = newfirst;
+	end->next = newfirst;
+	first->pre = newfirst;
 	(newfirst->coord).x = (first->coord).x;
 	(newfirst->coord).y = (first->coord).y;
 	switch (direction) {
@@ -209,7 +212,7 @@ struct NODE* settings()
 	h = (NODE*)malloc(sizeof(NODE));
 	h->coord.y = TEMPy--;
 	h->coord.x = TEMPx;
-	h->pre = NULL;			//当空的双向链表就像上图那样前驱和后驱都会指向自己；
+	h->pre = NULL;			//空的双向链表前驱和后驱都会指向自己；
 	h->next = NULL;
 	p = h;
 	for (size_t i = 0; i < 2; i++)
