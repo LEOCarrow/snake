@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+// ﻿#include "stdafx.h"
 
 static char print_array[Y_MAX][X_MAX];
 static unsigned int score = 0;
@@ -49,6 +49,7 @@ int main()
 	//loop
 	while (1)
 	{
+		fruit = gen_fruit(pHead);
 		pHead = list_insert(pHead);
 		list_delete(pHead);
 		hit_re = hitCheck(pHead, fruit);
@@ -235,6 +236,7 @@ struct Coordinate gen_fruit(NODE *first)
 				goto re_fruit;
 			current = current->next;
 		}
+	print_array[fruit.y][fruit.x] = '*';
 	return fruit;
 }
 
