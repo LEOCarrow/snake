@@ -1,18 +1,6 @@
-#pragma once
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <conio.h>
-#include <time.h>
-
-#define X_MAX 15
-#define Y_MAX 15
-#define TIME_DELAY 1
-
-
-extern char print_array[Y_MAX][X_MAX];
+static char print_array[Y_MAX][X_MAX];
 static unsigned int score = 0;
 static char direction = 'd';
 using namespace std;
@@ -39,13 +27,7 @@ struct Coordinate gen_fruit(NODE *first);
 
 int main()
 {
-<<<<<<< HEAD
-=======
-	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead = NULL;
-	short hit_re = 3;
 	int answer = '\0';
->>>>>>> origin/master
 	printf("The Gluttonous Snake Game\n");
 	printf("\nPress enter to start\nPress anykey to EXIT\n");
 	if ((answer = getchar()) == '\n') {
@@ -53,13 +35,9 @@ int main()
 	} else {
 		return 0;
 	}
-<<<<<<< HEAD
 	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead;
-	short hit_re;
-=======
-
->>>>>>> origin/master
+	struct NODE *pHead = NULL;
+	short hit_re = 3;
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
 		exit(-1);
@@ -136,9 +114,9 @@ void list_delete(NODE* pHead)
 	NODE* TEMP,*_TEMP;
 	_TEMP = pHead->pre;
 	TEMP = _TEMP->pre;
-
 	print_array[_TEMP->coord.y][_TEMP->coord.x] = ' ';
 	TEMP->next = pHead;
+	pHead->pre = TEMP;
 	free(_TEMP);
 }
 
@@ -170,9 +148,9 @@ struct NODE *list_insert(NODE *first)
 		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
 		break;
 	case 'd':
-		newfirst->coord.y = first->coord.y;
-		newfirst->coord.x = (first->coord.x) + 1;
-		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
+		newfirst->coord.y = (first->coord).y;
+		newfirst->coord.x = ((first->coord).x) + 1;
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	default:
 		return NULL;
@@ -221,7 +199,6 @@ struct NODE* settings()
 
 
 	NODE *p, *h, *l;
-	int n, x;
 	h = (NODE*)malloc(sizeof(NODE));
 	h->pre = NULL;			//当空的双向链表就像上图那样前驱和后驱都会指向自己；
 	h->next = NULL;
