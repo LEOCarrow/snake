@@ -121,17 +121,17 @@ void list_delete(NODE* pHead)
 
 struct NODE *list_insert(NODE *first)
 {
+	struct NODE *end;
 	struct NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
 		printf("Memory calloc F\n");
 		return NULL;
 	}
+	end = first->next;
 	first->next = newfirst->next;
 	first->next = newfirst;
 	newfirst->pre = first;
-	first = newfirst->next;
-	first->pre = newfirst;
-	first = newfirst->pre;
+	end->pre = newfirst;
 	switch (direction) {
 	case 'w':
 		newfirst->coord.y = (first->coord.y) + 1;
