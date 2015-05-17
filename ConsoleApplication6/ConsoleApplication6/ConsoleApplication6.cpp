@@ -39,13 +39,10 @@ struct Coordinate gen_fruit(NODE *first);
 
 int main()
 {
-<<<<<<< HEAD
-=======
 	struct Coordinate fruit = {0, 0};
 	struct NODE *pHead = NULL;
 	short hit_re = 3;
 	int answer = '\0';
->>>>>>> origin/master
 	printf("The Gluttonous Snake Game\n");
 	printf("\nPress enter to start\nPress anykey to EXIT\n");
 	if ((answer = getchar()) == '\n') {
@@ -53,13 +50,6 @@ int main()
 	} else {
 		return 0;
 	}
-<<<<<<< HEAD
-	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead;
-	short hit_re;
-=======
-
->>>>>>> origin/master
 	if (!(pHead = settings())) {
 		printf("Initialization Faild\n");
 		exit(-1);
