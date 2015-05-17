@@ -1,10 +1,10 @@
-// #pragma once
-// #include "stdafx.h"
+#pragma once
+#include "stdafx.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-// #include <conio.h>
+#include <conio.h>
 #include <time.h>
 
 #define X_MAX 15
