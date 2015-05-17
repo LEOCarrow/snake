@@ -1,16 +1,9 @@
-// ﻿#include "stdafx.h"
-// #include <stdlib.h>
-// #include <stdio.h>
-// #include <iostream>
-// #include <conio.h>
-// #include <time.h>
-//
-// #define X_MAX 15
-// #define Y_MAX 15
-// #define TIME_DELAY 1
+﻿#include "stdafx.h"
 static char print_array[Y_MAX][X_MAX];
 static unsigned int score = 0;
 static char direction = 'd';
+int snake_count = 3;
+bool if_get_fruit = 0;
 using namespace std;
 
 struct Coordinate			//点坐标
@@ -25,7 +18,7 @@ struct NODE				//双向链表结构
 };
 
 void list_delete(NODE *pHead);
-struct NODE* list_insert(NODE *first);
+struct NODE* list_insert(NODE *first,bool if_get_fruit);
 short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
 void print_frame();
 void delay();
@@ -58,7 +51,7 @@ int main()
 	while (1)
 	{
 		fruit = gen_fruit(pHead);
-		pHead = list_insert(pHead);
+		pHead = list_insert(pHead,0);
 		list_delete(pHead);
 		hit_re = hitCheck(pHead, fruit);
 		switch (hit_re)
@@ -68,7 +61,8 @@ int main()
 			case 2:
 				++score;
 				printf("\a");
-				if (!(pHead = list_insert(pHead))) {
+				if_get_fruit = 1;
+				if (!(pHead = list_insert(pHead,if_get_fruit))) {
 					printf("Memory F\n");
 					exit(-1);
 				}
@@ -130,7 +124,7 @@ void list_delete(NODE* pHead)
 	free(_TEMP);
 }
 
-struct NODE *list_insert(NODE *first)
+struct NODE *list_insert(NODE *first,bool if_get_fruit)
 {
 	struct NODE *end = NULL;
 	struct NODE *newfirst = (NODE *)malloc(sizeof(NODE));
@@ -167,6 +161,7 @@ struct NODE *list_insert(NODE *first)
 		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	}
+	if_get_fruit = 0;
 	return newfirst;
 }
 
@@ -244,7 +239,7 @@ struct Coordinate gen_fruit(NODE *first)
 
 		// 检查是否在蛇身上
 		NODE *current = first->next;
-		while (current != NULL) {
+		for (int i = 0; i < snake_count;i++) {
 			if (fruit.x == (current->coord).x && fruit.y == (current->coord).y)
 				goto re_fruit;
 			current = current->next;
