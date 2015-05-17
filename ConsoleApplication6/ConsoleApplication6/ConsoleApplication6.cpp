@@ -105,7 +105,6 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 		current = current->next;
 
 	}
-
 	// 啥都没撞
 	return 3;
 }
@@ -123,15 +122,17 @@ void list_delete(NODE* pHead)
 
 struct NODE *list_insert(NODE *first)
 {
+	struct NODE *end;
 	struct NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
 		printf("Memory calloc F\n");
 		return NULL;
 	}
-	newfirst->next = first;
-	newfirst->pre = NULL;
-	first->pre = newfirst;
-
+	end = first->next;
+	first->next = newfirst->next;
+	first->next = newfirst;
+	newfirst->pre = first;
+	end->pre = newfirst;
 	switch (direction) {
 	case 'w':
 		(newfirst->coord).y = ((first->coord).y) + 1;
@@ -153,10 +154,8 @@ struct NODE *list_insert(NODE *first)
 		(newfirst->coord).x = (first->coord.x) + 1;
 		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
-	default:
-		return NULL;
 	}
-	return newfirst;
+	return first;
 }
 
 void print_frame()
