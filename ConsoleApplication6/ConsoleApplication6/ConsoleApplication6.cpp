@@ -1,18 +1,6 @@
-#pragma once
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <conio.h>
-#include <time.h>
-
-#define X_MAX 15
-#define Y_MAX 15
-#define TIME_DELAY 1
-
-
-extern char print_array[Y_MAX][X_MAX];
+static char print_array[Y_MAX][X_MAX];
 static unsigned int score = 0;
 static char direction = 'd';
 using namespace std;
@@ -126,9 +114,9 @@ void list_delete(NODE* pHead)
 	NODE* TEMP,*_TEMP;
 	_TEMP = pHead->pre;
 	TEMP = _TEMP->pre;
-
 	print_array[(_TEMP->coord).y][(_TEMP->coord).x] = ' ';
 	TEMP->next = pHead;
+	pHead->pre = TEMP;
 	free(_TEMP);
 }
 
@@ -211,7 +199,6 @@ struct NODE* settings()
 
 
 	NODE *p, *h, *l;
-	int n, x;
 	h = (NODE*)malloc(sizeof(NODE));
 	h->pre = NULL;			//当空的双向链表就像上图那样前驱和后驱都会指向自己；
 	h->next = NULL;
