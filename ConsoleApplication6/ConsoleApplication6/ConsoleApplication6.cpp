@@ -38,21 +38,20 @@ struct Coordinate gen_fruit(NODE *first);
 
 int main()
 {
-	struct Coordinate fruit = {0, 0};
-	struct NODE *pHead;
-	short hit_re;
-	if (!(pHead = settings())) {
-		printf("Initialization Faild\n");
-		exit(-1);
-	}
-	//pointers
 	printf("The Gluttonous Snake Game\n");
 	printf("\nPress enter to start\nPress anykey to EXIT\n");
 	char answer = getchar();
 	if (answer == '\n') {
 		system("cls");
 	} else {
-		goto EXIT;
+		return 0;
+	}
+	struct Coordinate fruit = {0, 0};
+	struct NODE *pHead;
+	short hit_re;
+	if (!(pHead = settings())) {
+		printf("Initialization Faild\n");
+		exit(-1);
 	}
 	fflush(stdin);
 	//first start
