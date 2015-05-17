@@ -1,5 +1,13 @@
 // ﻿#include "stdafx.h"
-
+// #include <stdlib.h>
+// #include <stdio.h>
+// #include <iostream>
+// #include <conio.h>
+// #include <time.h>
+//
+// #define X_MAX 15
+// #define Y_MAX 15
+// #define TIME_DELAY 1
 static char print_array[Y_MAX][X_MAX];
 static unsigned int score = 0;
 static char direction = 'd';
@@ -122,14 +130,14 @@ void list_delete(NODE* pHead)
 
 struct NODE *list_insert(NODE *first)
 {
-	struct NODE *end;
+	struct NODE *end = NULL;
 	struct NODE *newfirst = (NODE *)malloc(sizeof(NODE));
 	if (!newfirst) {
 		printf("Memory calloc F\n");
 		return NULL;
 	}
 	end = first->next;
-	first->next = newfirst->next;
+	newfirst->next = first->next;
 	first->next = newfirst;
 	newfirst->pre = first;
 	end->pre = newfirst;
@@ -200,10 +208,12 @@ struct NODE* settings()
 
 	NODE *p, *h, *l;
 	h = (NODE*)malloc(sizeof(NODE));
+	h->coord.y = TEMPy--;
+	h->coord.x = TEMPx;
 	h->pre = NULL;			//当空的双向链表就像上图那样前驱和后驱都会指向自己；
 	h->next = NULL;
 	p = h;
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < 2; i++)
 	{
 		l = (NODE *)malloc(sizeof(NODE));
 		((l->coord).x) = TEMPx;	((l->coord).y) = TEMPy;		//赋值
