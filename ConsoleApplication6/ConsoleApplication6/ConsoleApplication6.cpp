@@ -104,6 +104,8 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 		current = current->next;
 
 	}
+	if ((first->coord).x == 0 || (first->coord).x == X_MAX || (first->coord).y == 0 || (first->coord).y == Y_MAX)
+		return 1;
 	// 啥都没撞
 	return 3;
 }
@@ -127,11 +129,12 @@ struct NODE *list_insert(NODE *first)
 		printf("Memory calloc F\n");
 		return NULL;
 	}
-	end = first->next;
-	first->next = newfirst->next;
-	first->next = newfirst;
-	newfirst->pre = first;
+	end = first->pre;
+	newfirst = first->pre;
+	newfirst->next = first;
+	newfirst->next = end;
 	end->pre = newfirst;
+	(newfirst->coord).x = (first->coord).x;				(newfirst->coord).y = (first->coord).y;
 	switch (direction) {
 	case 'w':
 		(newfirst->coord).y = ((first->coord).y) + 1;
@@ -150,11 +153,11 @@ struct NODE *list_insert(NODE *first)
 		break;
 	case 'd':
 		(newfirst->coord).y = (first->coord).y;
-		(newfirst->coord).x = (first->coord.x) + 1;
+		(newfirst->coord).x = ((first->coord).x) + 1;
 		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	}
-	return first;
+	return newfirst;
 }
 
 void print_frame()
