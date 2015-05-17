@@ -1,10 +1,10 @@
-#pragma once
-#include "stdafx.h"
+// #pragma once
+// #include "stdafx.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include <conio.h>
+// #include <conio.h>
 #include <time.h>
 
 #define X_MAX 15
@@ -102,7 +102,7 @@ int main()
 // 撞墙返回0，撞自己返回1，撞果子返回2，啥都没撞返回3
 short hitCheck(const NODE *first,struct Coordinate fruit)
 {
-	int head_x = first->coord.x, head_y = first->coord.y;
+	int head_x = (first->coord).x, head_y = (first->coord).y;
 	int body_x = 0, body_y = 0;
 
 	// 吃到果子
@@ -112,7 +112,7 @@ short hitCheck(const NODE *first,struct Coordinate fruit)
 	// 撞自己
 	NODE *current = first->next;
 	while (current != NULL) {
-		if (head_x == current->coord.x && head_y == current->coord.y)
+		if (head_x == (current->coord).x && head_y == (current->coord).y)
 			return 1;
 		current = current->next;
 
@@ -128,7 +128,7 @@ void list_delete(NODE* pHead)
 	_TEMP = pHead->pre;
 	TEMP = _TEMP->pre;
 
-	print_array[_TEMP->coord.y][_TEMP->coord.x] = ' ';
+	print_array[(_TEMP->coord).y][(_TEMP->coord).x] = ' ';
 	TEMP->next = pHead;
 	free(_TEMP);
 }
@@ -146,24 +146,24 @@ struct NODE *list_insert(NODE *first)
 
 	switch (direction) {
 	case 'w':
-		newfirst->coord.y = (first->coord.y) + 1;
-		newfirst->coord.x = first->coord.x;
-		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
+		(newfirst->coord).y = ((first->coord).y) + 1;
+		(newfirst->coord).x = (first->coord).x;
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	case 'a':
-		newfirst->coord.y = first->coord.y;
-		newfirst->coord.x = (first->coord.x) - 1;
-		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
+		(newfirst->coord).y = (first->coord).y;
+		(newfirst->coord).x = (first->coord.x) - 1;
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	case 's':
-		newfirst->coord.y = (first->coord.y) - 1;
-		newfirst->coord.x = first->coord.x;
-		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
+		(newfirst->coord).y = (first->coord.y) - 1;
+		(newfirst->coord).x = (first->coord).x;
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	case 'd':
-		newfirst->coord.y = first->coord.y;
-		newfirst->coord.x = (first->coord.x) + 1;
-		print_array[newfirst->coord.y][newfirst->coord.x] = 'O';
+		(newfirst->coord).y = (first->coord).y;
+		(newfirst->coord).x = (first->coord.x) + 1;
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
 		break;
 	default:
 		return NULL;
