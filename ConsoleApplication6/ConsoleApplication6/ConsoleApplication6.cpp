@@ -149,22 +149,22 @@ struct NODE *list_insert(NODE *first)
 	case 'w':
 		(newfirst->coord).y = ((first->coord).y) + 1;
 		(newfirst->coord).x = (first->coord).x;
-		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = '@';
 		break;
 	case 'a':
 		(newfirst->coord).y = (first->coord).y;
 		(newfirst->coord).x = (first->coord.x) - 1;
-		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = '@';
 		break;
 	case 's':
 		(newfirst->coord).y = (first->coord.y) - 1;
 		(newfirst->coord).x = (first->coord).x;
-		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = '@';
 		break;
 	case 'd':
 		(newfirst->coord).y = (first->coord).y;
 		(newfirst->coord).x = ((first->coord).x) + 1;
-		print_array[(newfirst->coord).y][(newfirst->coord).x] = 'O';
+		print_array[(newfirst->coord).y][(newfirst->coord).x] = '@';
 		break;
 	}
 	return newfirst;
