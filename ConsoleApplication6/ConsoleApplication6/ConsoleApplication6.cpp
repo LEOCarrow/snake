@@ -1,6 +1,3 @@
-// ConsoleApplication8.cpp : 定义控制台应用程序的入口点。
-//
-
 #include "stdafx.h"
 
 static char print_array[Y_MAX][X_MAX];
@@ -21,7 +18,7 @@ struct NODE				//双向链表结构
 	NODE* next;
 };
 
-NODE* list_delete(NODE *pHead);
+struct NODE* list_delete(NODE *pHead);
 struct NODE* list_insert(NODE *first, bool if_get_fruit);
 short hitCheck(const NODE *first, struct Coordinate fruit);	//检验碰撞
 void print_frame();
@@ -114,7 +111,7 @@ short hitCheck(const NODE *first, struct Coordinate fruit)
 		return 1;
 
 	// 撞自己
-	NODE *current = first->next;
+	struct NODE *current = first->next;
 	for (int i = 0; i<(snake_count - 1); i++) {
 		if (head_x == (current->coord).x && head_y == (current->coord).y)
 			return 1;
@@ -127,13 +124,12 @@ short hitCheck(const NODE *first, struct Coordinate fruit)
 	return 3;
 }
 
-NODE* list_delete(NODE* pHead)
+struct NODE* list_delete(NODE* pHead)
 {
-	NODE* TEMP, *_TEMP;
+	NODE* TEMP,*_TEMP;
 	TEMP = pHead->pre;
 	_TEMP = TEMP->pre;
 	print_array[(TEMP->coord).y][(TEMP->coord).x] = ' ';
-	printf("%c", print_array[TEMP->coord.y][TEMP->coord.x]);
 	_TEMP->next = pHead;
 	pHead->pre = _TEMP;
 	free(TEMP);
