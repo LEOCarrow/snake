@@ -1,4 +1,6 @@
-// #pragma once
+#pragma once
+
+#include "targetver.h"
 
 #include <stdlib.h>
 #include <stdio.h>
